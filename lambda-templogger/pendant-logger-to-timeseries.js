@@ -40,8 +40,10 @@ async function ingestCsvRecords(fileStream, writeClient) {
     var count_temp = 0;
     var sum_lumens = 0;
     var count_lumens = 0;
+    serialnumber = '21211722'
 
     for await (const dataRow of rl) {
+        /*
         if (counter === 0) {
             // special header row
             console.log(dataRow)
@@ -52,13 +54,14 @@ async function ingestCsvRecords(fileStream, writeClient) {
             serialnumber = split2[0]
             console.log(serialnumber)
         }
-        if (counter > 2) {
+        */
+        if (counter > 0) {
             var row = dataRow.toString().split(',');
 
             // The logger has entries for when interacting with it during manual data extraction.  
             // Eliminate those records
 
-            const interaction = (row[7].toString().trim().length > 0 || row[8].toString().trim().length > 0 || row[9].toString().trim().length > 0) ? true : false;
+            const interaction = (row[8].toString().trim().length > 0 || row[9].toString().trim().length > 0 || row[10].toString().trim().length > 0) ? true : false;
 
             if (!interaction) {
                 const dimensions = [
@@ -66,10 +69,11 @@ async function ingestCsvRecords(fileStream, writeClient) {
                 ];
                 const recordTime = currentTime - counter * 50;
                 let version = Date.now();
-                const timestamp_parsed = Date.parse(row[0])
+                const timestamp_parsed = Date.parse(row[1])
                 const timestamp = new Date(timestamp_parsed)
+                
                 var value = 0.0
-                value = (row[1].toString().trim().length > 0) ? parseFloat(row[1].toString()) : 0.0;
+                value = (row[2].toString().trim().length > 0) ? parseFloat(row[2].toString()) : 0.0;
                 if (timestamp.getMonth() === target_month) {
                     sum_temp = sum_temp + value;
                     count_temp++;
@@ -82,10 +86,11 @@ async function ingestCsvRecords(fileStream, writeClient) {
                     'Time': timestamp.getTime().toString(),
                     'Version': version
                 };
+                console.log(record1)
 
                 records.push(record1);
 
-                value = (row[4].toString().trim().length > 0) ? parseFloat(row[4].toString()) : 0.0;
+                value = (row[5].toString().trim().length > 0) ? parseFloat(row[5].toString()) : 0.0;
                 if ((timestamp.getMonth() === target_month) && (timestamp.getHours() === target_hour)) {
                     sum_lumens = sum_lumens + value
                     count_lumens++;
@@ -99,6 +104,7 @@ async function ingestCsvRecords(fileStream, writeClient) {
                     'Version': version
                 };
 
+                console.log(record2)
                 records.push(record2);
 
                 // 

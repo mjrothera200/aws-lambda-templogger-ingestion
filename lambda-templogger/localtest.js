@@ -33,7 +33,7 @@ queryClient = new AWS.TimestreamQuery();
 const S3 = new AWS.S3();
 const params = {
   Bucket: 'oyster-haven-templogger',
-  Key: 'oyster-haven 2022-01-08 15_46_21 -0500.csv'
+  Key: 'oyster-haven 2022-05-30 14_25_37 EDT (Data EDT).csv'
 };
 
 async function putResult(result) {
